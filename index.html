@@ -12,45 +12,35 @@
             <h2>Expense Tracker</h2>
             <div class="balanceWrapper">
                 <small>Your balance</small>
-                <span class="balance">100</span>
+                <span class="balance"></span>
             </div>
             <div class="income_expenseWrapper">
                 <div class="incomeDiv">
                     <small>Income</small>
-                    <span class="income"> 100 </span>
+                    <span class="income"></span>
                 </div>
                 <div class="expenseDiv">
                     <small>Expense</small>
-                    <span class="income"> 100 </span>
+                    <span class="expense"></span>
                 </div>
             </div>
             <div class="historyWrapper">
                 <h3>History</h3>
                 <hr />
-                <div class="history">
-                    <li class="historyItem">
-                        <span class="itemName">Camera</span
-                        ><span class="amountValue">-100</span>
-                        <span class="itemColor minus"></span>
-                    </li>
-                    <li class="historyItem plus">
-                        <span class="itemName">Camera</span
-                        ><span class="amountValue">+300</span>
-                        <span class="itemColor plus"></span>
-                    </li>
-                </div>
+                <div class="history"></div>
             </div>
             <div class="addNewWrapper">
                 <h3>Add new transaction</h3>
                 <hr />
                 <form id="form">
                     <label for="text"><small>Text</small></label>
-                    <input type="text" name="text" />
+                    <input type="text" name="text" required />
                     <label for="amount"><small>Amount</small></label>
-                    <input type="number" name="amount" />
+                    <input type="number" name="amount" required />
                     <input type="submit" value="Add transaction" />
                 </form>
             </div>
         </div>
+        <script src="script.js"></script>
     </body>
 </html>

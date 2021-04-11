@@ -35,6 +35,14 @@ small {
     padding: 10px;
 }
 
+.income {
+    color: #1fcc8f;
+}
+
+.expense {
+    color: #d12f24;
+}
+
 .income,
 .expense {
     font-size: 1.2rem;
@@ -73,20 +81,35 @@ small {
     justify-content: space-between;
     margin: 10px 0;
     font-size: 0.9rem;
+    /* align-items: center; */
 }
 
 .history li .itemName {
-    width: 75%;
+    width: 60%;
     padding: 8px;
 }
 
 .history li .amountValue {
-    width: 23%;
-    padding: 8px 8px 8px 16px;
+    width: 30%;
+    padding: 8px 8px 8px 0;
 }
 
 .history li .itemColor {
     width: 2%;
+}
+
+.history li .delete {
+    width: 8%;
+    padding: 8px;
+    justify-content: center;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.history li .delete img {
+    width: 8px;
+    cursor: pointer;
 }
 
 .history li .itemColor.plus {
