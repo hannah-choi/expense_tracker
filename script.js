@@ -30,26 +30,38 @@ const updateDOM = () => {
     ><span class="amountValue">${
         item.amount > 0 ? "+" + item.amount.toFixed(2) : item.amount.toFixed(2)
     }</span>
-    
     <span class="delete">
-    <img src="delete.svg"></span>
+    <img data-desc="deleteButton" data-index=${i} src="delete.svg"></span>
     </li>`
     );
     $history.innerHTML = expenseList.join("");
 };
 
 const updateNumbers = () => {
-    income = numberArray
+    const expenseFilter = numberArray
         .map(item => item.amount)
-        .filter(item => item > 0)
-        .reduce((acc, i) => acc + i);
-    expense = numberArray
+        .filter(item => item > 0);
+    const incomeFilter = numberArray
         .map(item => item.amount)
-        .filter(item => item < 0)
-        .reduce((acc, i) => acc + i);
-    balance = numberArray.map(item => item.amount).reduce((acc, i) => acc + i);
+        .filter(item => item < 0);
+    income =
+        expenseFilter.length > 0
+            ? expenseFilter.reduce((acc, i) => acc + i)
+            : 0;
+    expense =
+        incomeFilter.length > 0 ? incomeFilter.reduce((acc, i) => acc + i) : 0;
+    balance =
+        numberArray.length > 0
+            ? numberArray.map(item => item.amount).reduce((acc, i) => acc + i) +
+              200
+            : 200;
 
     updateDOM();
+};
+
+const deleteItem = index => {
+    numberArray.splice(index, 1);
+    updateNumbers();
 };
 
 const addItemToList = target => {
@@ -59,7 +71,15 @@ const addItemToList = target => {
     form.reset();
 };
 
-updateDOM();
+updateNumbers();
+
+$history.addEventListener("click", ({ target }) => {
+    if (target.dataset.desc === "deleteButton") {
+        deleteItem(target.dataset.index);
+    } else {
+        return;
+    }
+});
 
 form.addEventListener("submit", e => {
     e.preventDefault();
