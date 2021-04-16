@@ -4,26 +4,54 @@ const $income = document.querySelector(".income");
 const $history = document.querySelector(".history");
 const form = document.getElementById("form");
 let expenseList = null;
-let income = 0;
-let expense = 0;
-let balance = 200;
 
-let numberArray = [
-    // { text: "Sauvignon blanc", amount: -7 },
-    // { text: "Goat Cheese", amount: -1.5 },
-];
-
-const formatNumber = amount => {
-    return `£${Math.abs(amount).toFixed(2)}`;
+const getID = () => {
+    return Math.floor(Math.random() * 1000000000);
 };
 
-const updateDOM = () => {
-    $income.innerHTML = formatNumber(income);
-    $expense.innerHTML = formatNumber(expense);
-    $balance.innerHTML = formatNumber(balance);
+let numberArray = [];
 
+const formatNumber = amount => {
+    return amount >= 0
+        ? `£${Math.abs(amount).toFixed(2)}`
+        : `-£${Math.abs(amount).toFixed(2)}`;
+};
+
+//update total, expense, income
+const updateNumbers = () => {
+    const amounts = numberArray.map(item => item.amount);
+    const total = amounts.reduce((acc, item) => (acc += item), 0).toFixed(2);
+    const expense = amounts
+        .filter(item => item < 0)
+        .reduce((acc, item) => (acc += item), 0)
+        .toFixed(2);
+    const income = amounts
+        .filter(item => item > 0)
+        .reduce((acc, item) => (acc += item), 0)
+        .toFixed(2);
+
+    $income.innerText = formatNumber(income);
+    $expense.innerText = `£${Math.abs(expense).toFixed(2)}`;
+    $balance.innerText = formatNumber(total);
+};
+
+//when click the x button on each item on the list
+const deleteItem = index => {
+    numberArray = numberArray.filter(item => item.id !== index);
+    init();
+};
+
+//when add item on the list
+const addItemToList = target => {
+    const amount = +target.amount.value;
+    numberArray.push({ text: target.text.value, amount: amount, id: getID() });
+    init();
+    form.reset();
+};
+
+const updateUI = () => {
     expenseList = numberArray.map(
-        (item, i) => `<li class="historyItem plus" data-index=${i}>
+        item => `<li class="historyItem plus">
         <span class="${
             item.amount < 0 ? "itemColor plus" : "itemColor minus"
         }"></span><span class="itemName">${item.text}</span
@@ -31,51 +59,30 @@ const updateDOM = () => {
         item.amount > 0 ? "+" + item.amount.toFixed(2) : item.amount.toFixed(2)
     }</span>
     <span class="delete">
-    <img data-desc="deleteButton" data-index=${i} src="delete.svg"></span>
+    <img data-desc="deleteButton" data-index=${item.id} src="delete.svg"></span>
     </li>`
     );
     $history.innerHTML = expenseList.join("");
 };
 
-const updateNumbers = () => {
-    const expenseFilter = numberArray
-        .map(item => item.amount)
-        .filter(item => item > 0);
-    const incomeFilter = numberArray
-        .map(item => item.amount)
-        .filter(item => item < 0);
-    income =
-        expenseFilter.length > 0
-            ? expenseFilter.reduce((acc, i) => acc + i)
-            : 0;
-    expense =
-        incomeFilter.length > 0 ? incomeFilter.reduce((acc, i) => acc + i) : 0;
-    balance =
-        numberArray.length > 0
-            ? numberArray.map(item => item.amount).reduce((acc, i) => acc + i) +
-              200
-            : 200;
-
-    updateDOM();
-};
-
-const deleteItem = index => {
-    numberArray.splice(index, 1);
+const init = () => {
+    updateUI();
     updateNumbers();
+    localStorage.setItem("numberArray", JSON.stringify(numberArray));
 };
 
-const addItemToList = target => {
-    const amount = +target.amount.value;
-    numberArray.push({ text: target.text.value, amount: amount });
-    updateNumbers(amount);
-    form.reset();
+const load = () => {
+    if (localStorage.getItem("numberArray")) {
+        numberArray = JSON.parse(localStorage.getItem("numberArray"));
+    }
 };
 
-updateNumbers();
+load();
+init();
 
 $history.addEventListener("click", ({ target }) => {
     if (target.dataset.desc === "deleteButton") {
-        deleteItem(target.dataset.index);
+        deleteItem(+target.dataset.index);
     } else {
         return;
     }
